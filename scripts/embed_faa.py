@@ -2,7 +2,7 @@ import argparse
 import os
 import pickle
 import numpy as np
-from protbert_bfd_embed_utils import protbert_bfd_embed
+from ProtT5_embed_utils import prott5_xl_uniref50_embed
 
 def main():
 	parser = argparse.ArgumentParser()
@@ -30,7 +30,7 @@ def main():
 	NUM_GPU = args.num_gpus
 	BATCH_SIZE = args.batch_size
 
-	embedding = protbert_bfd_embed(faa_path=faa_path, max_length=MAX_LENGTH, num_gpus=NUM_GPU, batch_size=BATCH_SIZE)
+	embedding = prott5_xl_uniref50_embed(faa_path=faa_path, max_length=MAX_LENGTH, num_gpus=NUM_GPU, batch_size=BATCH_SIZE)
 	pickle.dump(embedding, open('{0}/{1}_embeddings_dict.pkl' ''.format(out_path, faa_file_name), "wb"))
 
 if __name__ == '__main__':
