@@ -1,4 +1,9 @@
-from biotransformers import BioTransformers
+from transformers import T5Tokenizer, T5EncoderModel
+import torch
+import re
+import time
+import gc
+
 from tqdm import tqdm
 import pickle
 from typing import List
@@ -6,7 +11,7 @@ import numpy as np
 
 ### TO DO: conver the logging steps to Value Exceptions
 
-def _embed_seqs(transformer: BioTransformers, sequences: List[str], batch_size: int) -> np.ndarray:
+def _embed_seqs(transformer: T5EncoderModel, tok: T5Tokenizer, sequences: List[str], batch_size: int) -> np.ndarray:
     vectors = np.empty(shape = (0,1024), dtype=np.float32)
     emb = transformer.compute_embeddings(sequences, pool_mode=('mean'), batch_size=batch_size)
     vectors = np.concatenate((vectors, emb['mean']), axis=0)
