@@ -47,7 +47,7 @@ def prott5_xl_uniref50_embed(faa_path: str, max_length: int, num_gpus: int, batc
 
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu') ## ProtT5 only appears to support 1 GPU, in half precision
     print("Using device: {}".format(device))
-    transformer_link = "Rostlab/prot_t5_xl_uniref50"
+    transformer_link = "Rostlab/prot_t5_xl_half_uniref50-enc"
     print("Loading: {}".format(transformer_link))
     model = T5EncoderModel.from_pretrained(transformer_link)
     model.full() if device=='cpu' else model.half()
