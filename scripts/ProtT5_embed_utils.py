@@ -57,19 +57,6 @@ def prott5_xl_uniref50_embed(faa_path: str, max_length: int, num_gpus: int, batc
 
     identifiers, sequences = _get_faa(faa_path, max_length=max_length)
 
-    ## code from https://github.com/agemagician/ProtTrans/tree/master
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-
-    # Load the tokenizer
-    tokenizer = T5Tokenizer.from_pretrained('Rostlab/prot_t5_xl_half_uniref50-enc', do_lower_case=False)
-    
-    # Load the model
-    model = T5EncoderModel.from_pretrained("Rostlab/prot_t5_xl_half_uniref50-enc").to(device)
-    
-    # only GPUs support half-precision currently; if you want to run on CPU use full-precision (not recommended, much slower)
-    if device == torch.device("cpu"):
-        model.to(torch.float32)
-
     ## batch sequence embedding to reduce memory
     d = {}
     sequence_batch = 100
