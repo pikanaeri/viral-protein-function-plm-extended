@@ -10,6 +10,8 @@ def main():
 	parser.add_argument("-out", help="path to directory for script outputs", default='output')
 	parser.add_argument("--num_gpus", help="number of GPUs to utilize for embedding, default 0",
 					type=int, default=0)
+	parser.add_argument("-model", help="model that does the embedding", required=True)
+	parser.add_argument("-tokenizer", help="tokenizer for the model", default=None)
 	parser.add_argument("--max_length", help="maximum length of protein to embed, default 5,096 amino acids",
                     type=int, default=5096)
 	parser.add_argument("--batch_size", help="batch size for BioTransformers compute_embeddings method",
@@ -29,8 +31,10 @@ def main():
 	MAX_LENGTH = args.max_length
 	NUM_GPU = args.num_gpus
 	BATCH_SIZE = args.batch_size
+	MODEL = args.model
+	TOKENIZER = args.tokenizer
 
-	embedding = prott5_xl_uniref50_embed(faa_path=faa_path, max_length=MAX_LENGTH, num_gpus=NUM_GPU, batch_size=BATCH_SIZE)
+	embedding = prott5_xl_uniref50_embed(faa_path=faa_path, max_length=MAX_LENGTH, num_gpus=NUM_GPU, batch_size=BATCH_SIZE, model=MODEL, tokenizer=TOKENIZER)
 	pickle.dump(embedding, open('{0}/{1}_embeddings_dict.pkl' ''.format(out_path, faa_file_name), "wb"))
 
 if __name__ == '__main__':
