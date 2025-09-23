@@ -70,7 +70,7 @@ def prott5_xl_uniref50_embed(faa_path: str, max_length: int, num_gpus: int, batc
         if start == len(sequences):
             continue
 
-        s_vectors = _embed_seqs_prott5(transformer=model, tok=tokenizer, sequences=sequences[start:end], batch_size=batch_size)
+        s_vectors = _embed_seqs_prott5(model=model, tok=tokenizer, sequences=sequences[start:end], batch_size=batch_size)
         d.update(dict(zip(identifiers[start:end], s_vectors)))
 
 
