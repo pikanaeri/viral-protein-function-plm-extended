@@ -13,10 +13,12 @@ import numpy as np
 
 def _embed_seqs_prott5(model: T5EncoderModel, tok: T5Tokenizer, device, sequences: List[str], batch_size: int) -> np.ndarray:
     ## code from https://github.com/agemagician/ProtTrans/tree/master
+    print(type(model))
+    
     sequences = [" ".join(list(re.sub(r"[UZOB]", "X", sequence))) for sequence in sequences]
     ids = tok(sequences, add_special_tokens=True, padding="longest")
     vectors = []
-    
+
     input_ids = torch.tensor(ids['input_ids']).to(device)
     attention_mask = torch.tensor(ids['attention_mask']).to(device)
     
@@ -56,6 +58,13 @@ def _get_faa(path: str, max_length: int = 0) -> List[str]:
 
 def prott5_xl_uniref50_embed(faa_path: str, max_length: int, num_gpus: int, batch_size: int, model, tokenizer) -> dict:
 
+    if num_gpus == 0: 
+      device = 'cpu'
+    else: 
+      device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
+    print("Using device: {}".format(device))
+
     identifiers, sequences = _get_faa(faa_path, max_length=max_length)
 
     ## batch sequence embedding to reduce memory
@@ -70,7 +79,7 @@ def prott5_xl_uniref50_embed(faa_path: str, max_length: int, num_gpus: int, batc
         if start == len(sequences):
             continue
 
-        s_vectors = _embed_seqs_prott5(model=model, tok=tokenizer, sequences=sequences[start:end], batch_size=batch_size)
+        s_vectors = _embed_seqs_prott5(model=model, tok=tokenizer, device=device, sequences=sequences[start:end], batch_size=batch_size)
         d.update(dict(zip(identifiers[start:end], s_vectors)))
 
 
