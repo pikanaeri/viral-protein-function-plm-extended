@@ -12,4 +12,5 @@ dependencies:
     - torch>=1.7.0,<1.9
     - tqdm>=4.60.0
     - transformers>=4.6.1,<4.7
+    - numpy < 2
 prefix: /opt/anaconda3/envs/plm_vpf_embed
