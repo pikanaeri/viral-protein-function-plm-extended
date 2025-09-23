@@ -11,10 +11,11 @@ import numpy as np
 
 ### TO DO: conver the logging steps to Value Exceptions
 
-def _embed_seqs_prott5(transformer: T5EncoderModel, tok: T5Tokenizer, sequences: List[str], batch_size: int) -> np.ndarray:
+def _embed_seqs_prott5(model: T5EncoderModel, tok: T5Tokenizer, device, sequences: List[str], batch_size: int) -> np.ndarray:
     ## code from https://github.com/agemagician/ProtTrans/tree/master
-    sequences = [" ".join(list(re.sub(r"[UZOB]", "X", sequence))) for sequence in sequence_examples]
-    ids = tok(sequence_examples, add_special_tokens=True, padding="longest")
+    sequences = [" ".join(list(re.sub(r"[UZOB]", "X", sequence))) for sequence in sequences]
+    ids = tok(sequences, add_special_tokens=True, padding="longest")
+    vectors = []
     
     input_ids = torch.tensor(ids['input_ids']).to(device)
     attention_mask = torch.tensor(ids['attention_mask']).to(device)
@@ -22,8 +23,8 @@ def _embed_seqs_prott5(transformer: T5EncoderModel, tok: T5Tokenizer, sequences:
     with torch.no_grad():
         embedding_repr = model(input_ids=input_ids, attention_mask=attention_mask)
     
-    for id in range(gsz):
-      emb = embedding_repr.last_hidden_state[id, :len(sequence_examples[id])]
+    for id in range(batch_size):
+      emb = embedding_repr.last_hidden_state[id, :len(sequences[id])]
       emb = emb.mean(dim=0)
       emb = emb.cpu().numpy()
       vectors.append(np.array(emb))
@@ -53,7 +54,7 @@ def _get_faa(path: str, max_length: int = 0) -> List[str]:
 
     return idents, seqs
 
-def prott5_xl_uniref50_embed(faa_path: str, max_length: int, num_gpus: int, batch_size: int) -> dict:
+def prott5_xl_uniref50_embed(faa_path: str, max_length: int, num_gpus: int, batch_size: int, model, tokenizer) -> dict:
 
     identifiers, sequences = _get_faa(faa_path, max_length=max_length)
 
