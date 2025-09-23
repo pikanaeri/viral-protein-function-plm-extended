@@ -2,6 +2,7 @@ import argparse
 import os
 import pickle
 import numpy as np
+from transformers import T5Tokenizer, T5EncoderModel
 from ProtT5_embed_utils import prott5_xl_uniref50_embed
 
 def main():
@@ -10,8 +11,8 @@ def main():
 	parser.add_argument("-out", help="path to directory for script outputs", default='output')
 	parser.add_argument("--num_gpus", help="number of GPUs to utilize for embedding, default 0",
 					type=int, default=0)
-	parser.add_argument("-model", help="model that does the embedding", required=True)
-	parser.add_argument("-tokenizer", help="tokenizer for the model", default=None)
+	parser.add_argument("-model", help="model that does the embedding", required=True, type=T5EncoderModel)
+	parser.add_argument("-tokenizer", help="tokenizer for the model", default=None, type=T5Tokenizer)
 	parser.add_argument("--max_length", help="maximum length of protein to embed, default 5,096 amino acids",
                     type=int, default=5096)
 	parser.add_argument("--batch_size", help="batch size for BioTransformers compute_embeddings method",
