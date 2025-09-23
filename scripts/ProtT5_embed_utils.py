@@ -7,29 +7,44 @@ import gc
 from tqdm import tqdm
 import pickle
 from typing import List
+import onnxruntime as ort
 import numpy as np
+from transformers import T5Tokenizer
 
 ### TO DO: conver the logging steps to Value Exceptions
 
-def _embed_seqs_prott5(model: T5EncoderModel, tok: T5Tokenizer, device, sequences: List[str], batch_size: int) -> np.ndarray:
-    ## code from https://github.com/agemagician/ProtTrans/tree/master
-    print(type(model))
+def _embed_seqs_prott5(device, sequences: List[str], batch_size: int) -> np.ndarray:
+    ## code from https://huggingface.co/Rostlab/prot-t5-xl-uniref50-enc-onnx
     
+    # Load tokenizer from local directory (after download)
+    tokenizer = T5Tokenizer.from_pretrained("./", do_lower_case=False, legacy=False)
+    
+    # Load ONNX model
+    session = ort.InferenceSession("model.onnx")
+    
+    # Preprocess: replace rare amino acids and add spaces
     sequences = [" ".join(list(re.sub(r"[UZOB]", "X", sequence))) for sequence in sequences]
     ids = tok(sequences, add_special_tokens=True, padding="longest")
     vectors = []
-
-    input_ids = torch.tensor(ids['input_ids']).to(device)
-    attention_mask = torch.tensor(ids['attention_mask']).to(device)
     
-    with torch.no_grad():
-        embedding_repr = model(input_ids=input_ids, attention_mask=attention_mask)
+    # Tokenize
+    inputs = tokenizer(sequences, return_tensors="np", padding=True, truncation=False)
+    
+    # Run inference
+    outputs = session.run(
+        None, 
+        {
+            "input_ids": inputs["input_ids"].astype(np.int64),
+            "attention_mask": inputs["attention_mask"].astype(np.int64)
+        }
+    )
+
+    embeddings = outputs[0]
     
     for id in range(batch_size):
-      emb = embedding_repr.last_hidden_state[id, :len(sequences[id])]
-      emb = emb.mean(dim=0)
-      emb = emb.cpu().numpy()
-      vectors.append(np.array(emb))
+      emb = embeddings[id, 1:len(sequences[id].split())+1]
+      emb = np.mean(emb, axis=0)
+      vectors.append(emb)
     
     return vectors
 
@@ -56,7 +71,7 @@ def _get_faa(path: str, max_length: int = 0) -> List[str]:
 
     return idents, seqs
 
-def prott5_xl_uniref50_embed(faa_path: str, max_length: int, num_gpus: int, batch_size: int, model, tokenizer) -> dict:
+def prott5_xl_uniref50_embed(faa_path: str, max_length: int, num_gpus: int, batch_size: int) -> dict:
 
     if num_gpus == 0: 
       device = 'cpu'
@@ -79,7 +94,7 @@ def prott5_xl_uniref50_embed(faa_path: str, max_length: int, num_gpus: int, batc
         if start == len(sequences):
             continue
 
-        s_vectors = _embed_seqs_prott5(model=model, tok=tokenizer, device=device, sequences=sequences[start:end], batch_size=batch_size)
+        s_vectors = _embed_seqs_prott5(device=device, sequences=sequences[start:end], batch_size=batch_size)
         d.update(dict(zip(identifiers[start:end], s_vectors)))
 
 
