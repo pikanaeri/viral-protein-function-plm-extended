@@ -14,4 +14,5 @@ dependencies:
     - transformers>=4.6.1,<4.7
     - numpy < 2
     - onnxruntime
+    - sentencepiece
 prefix: /opt/anaconda3/envs/plm_vpf_embed
