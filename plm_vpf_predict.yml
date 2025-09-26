@@ -18,5 +18,6 @@ dependencies:
     - tqdm>=4.60.0
     - transformers>=4.6.1,<4.7
     - numpy < 3
+    - onnxruntime
 
 prefix: /opt/anaconda3/envs/plm_vpf_predict
