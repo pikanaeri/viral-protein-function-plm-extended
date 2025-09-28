@@ -24,7 +24,7 @@ def _embed_seqs_prott5(device, sequences: List[str], batch_size: int) -> np.ndar
     
     # Preprocess: replace rare amino acids and add spaces
     sequences = [" ".join(list(re.sub(r"[UZOB]", "X", sequence))) for sequence in sequences]
-    ids = tok(sequences, add_special_tokens=True, padding="longest")
+    ids = tokenizer(sequences, add_special_tokens=True, padding="longest")
     vectors = []
     
     # Tokenize
