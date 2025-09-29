@@ -17,7 +17,7 @@ def _embed_seqs_prott5(device, sequences: List[str], batch_size: int) -> np.ndar
     ## code from https://huggingface.co/Rostlab/prot-t5-xl-uniref50-enc-onnx
     
     # Load tokenizer from local directory (after download)
-    tokenizer = T5Tokenizer.from_pretrained("./prot_t5_onnx", do_lower_case=False, legacy=False)
+    tokenizer = T5Tokenizer.from_pretrained("./", do_lower_case=False, legacy=False)
     
     # Load ONNX model
     session = ort.InferenceSession("model.onnx")
