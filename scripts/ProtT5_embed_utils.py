@@ -20,7 +20,7 @@ def _embed_seqs_prott5(device, sequences: List[str], batch_size: int) -> np.ndar
     tokenizer = T5Tokenizer.from_pretrained("./", do_lower_case=False, legacy=False, local_files_only=True)
     
     # Load ONNX model
-    session = ort.InferenceSession("model.onnx")
+    session = ort.InferenceSession("model.onnx", local_files_only=True)
     
     # Preprocess: replace rare amino acids and add spaces
     sequences = [" ".join(list(re.sub(r"[UZOB]", "X", sequence))) for sequence in sequences]
