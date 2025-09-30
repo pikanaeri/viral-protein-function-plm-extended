@@ -15,12 +15,12 @@ from transformers import T5Tokenizer
 
 def _embed_seqs_prott5(device, sequences: List[str], batch_size: int) -> np.ndarray:
     ## code from https://huggingface.co/Rostlab/prot-t5-xl-uniref50-enc-onnx
-    
+
     # Load tokenizer from local directory (after download)
-    tokenizer = T5Tokenizer.from_pretrained("./", do_lower_case=False, legacy=False, local_files_only=True)
+    tokenizer = T5Tokenizer.from_pretrained("./prot_t5_onnx", do_lower_case=False, legacy=False, local_files_only=True)
     
     # Load ONNX model
-    session = ort.InferenceSession("model.onnx", local_files_only=True)
+    session = ort.InferenceSession("prot_t5_onnx/model.onnx", local_files_only=True)
     
     # Preprocess: replace rare amino acids and add spaces
     sequences = [" ".join(list(re.sub(r"[UZOB]", "X", sequence))) for sequence in sequences]
