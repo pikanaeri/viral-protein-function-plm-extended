@@ -17,6 +17,7 @@ dependencies:
     - torch>=1.7.0,<1.9
     - tqdm>=4.60.0
     - transformers>=4.6.1,<4.7
+    - keras <= 3.0
     - numpy < 3
     - onnxruntime
 
