@@ -45,5 +45,5 @@ def format_model_predict(prediction_vectors: np.ndarray, classes_path: str, faa_
 	return pd.DataFrame(prediction_vectors, columns=classes.classes_, index=faa_identifiers)
 
 def model_predict(model_path: str, embeddings: np.ndarray):
-	model = keras.models.load_model(model_path)
+	model = keras.layers.TFSMLayer(model_path)
 	return model.predict(embeddings, verbose=0)
