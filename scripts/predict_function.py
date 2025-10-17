@@ -24,8 +24,8 @@ def main():
 	### check to see faa exists
 	out_path = os.getcwd() + '/' + args.out
 
-	MODEL = 'model/model_unknown_80_07092023/'
-	CLASSES = 'model/model_unknown_80_07092023_lb.pkl'
+	MODEL = 'models/model_unknown.keras'
+	CLASSES = 'models/model_unknown_lb.pkl'
 
 	MODEL_PATH = os.getcwd() + '/' + MODEL
 	CLASSES_PATH = os.getcwd() + '/' + CLASSES
