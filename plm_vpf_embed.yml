@@ -13,7 +13,7 @@ dependencies:
     - tqdm>=4.60.0
     - transformers>=4.6.1,<4.7
     - numpy < 2
-    - keras <=3.0
+    - keras >=3.0
     - onnxruntime
     - sentencepiece
 prefix: /opt/anaconda3/envs/plm_vpf_embed
