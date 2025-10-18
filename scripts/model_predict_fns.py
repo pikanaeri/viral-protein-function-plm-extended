@@ -1,5 +1,6 @@
 from typing import List
 from tensorflow import keras
+from tensorflow.keras.models import load_model
 import pandas as pd
 import numpy as np
 import pickle
@@ -45,5 +46,5 @@ def format_model_predict(prediction_vectors: np.ndarray, classes_path: str, faa_
 	return pd.DataFrame(prediction_vectors, columns=classes.classes_, index=faa_identifiers)
 
 def model_predict(model_path: str, embeddings: np.ndarray):
-	model = keras.layers.TFSMLayer(model_path, call_endpoint='serving_default')
+	model = load_model(model_path)
 	return model.predict(embeddings, verbose=0)
