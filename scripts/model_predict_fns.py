@@ -47,6 +47,6 @@ def format_model_predict(prediction_vectors: np.ndarray, classes_path: str, faa_
 
 def model_predict(model_path: str, embeddings: np.ndarray):
 	print(tensorflow.__version__)
- 	print(keras.__version__)
+	print(keras.__version__)
 	model = load_model(model_path)
 	return model.predict(embeddings, verbose=0)
