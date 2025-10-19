@@ -1,5 +1,6 @@
 import argparse
 import os
+import tensorflow
 import pickle
 import pandas as pd
 import numpy as np
