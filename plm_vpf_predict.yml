@@ -8,5 +8,9 @@ dependencies:
   - tensorflow=2.11.1
   - seaborn=0.12.2
   - scikit-learn=1.1.3
+  
   - onnxruntime
+  - transformers
+  - sentencepiece
+  - torch
 prefix: /opt/anaconda3/envs/plm_vpf_predict
