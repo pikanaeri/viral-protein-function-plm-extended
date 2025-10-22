@@ -9,8 +9,9 @@ dependencies:
   - seaborn=0.12.2
   - scikit-learn=1.1.3
 
-  - torch
-  - onnxruntime
+  - pytorch=1.12
+  - onnxruntime>1.12.1
+  
   - transformers
   - sentencepiece
 prefix: /opt/anaconda3/envs/plm_vpf_predict
