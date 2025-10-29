@@ -9,9 +9,9 @@ dependencies:
   - tensorflow=2.11.1
   - seaborn=0.12.2
   - scikit-learn=1.1.3
+  - pytorch>2.1
   
-  - pip: 
-    - pytorch>2.1
+  - pip:
     - transformers
     - sentencepiece
     
